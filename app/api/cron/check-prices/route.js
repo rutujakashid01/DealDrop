@@ -14,7 +14,7 @@ export async function POST(request){
         const authHeader= request.headers.get("authorization");
         const cronSecret= process.env.CRON_SECRET;
 
-        if (!cronSecret || !authHeader !== `Bearer ${cronSecret}`){
+        if (!cronSecret || authHeader !== `Bearer ${cronSecret}`){
             return NextResponse.json({error:"Unauthorized"},{status:401});
 
         }
@@ -30,9 +30,9 @@ export async function POST(request){
 
         if (productsError) throw productsError;
         
-        console.log(`Found ${products.lenght} products to check`);
+        console.log(`Found ${products.length} products to check`);
         const results={
-            total: products.lenght,
+            total: products.length,
             updated:0,
             failed:0,
             priceChanges:0,
@@ -73,7 +73,7 @@ export async function POST(request){
                     //Alert
                     const {
                         data:{user},
-                    }=(await supabase).auth.admin.getUserById(product.user_id);
+                    }=await supabase.auth.admin.getUserById(product.user_id);
                     
                     if(user?.email){
                         //send email
@@ -109,5 +109,5 @@ export async function POST(request){
         return NextResponse.json({error:error.message}, {status:500});
 
     }
-
-} 
+}
+// curl.exe -X POST https://dealdropai.vercel.app/api/cron/check-prices -H "Authorization:Bearer d5dc939c50cf0ef98960806a061ad89720c46bde38897e79b1c4dd03d68465ef"
