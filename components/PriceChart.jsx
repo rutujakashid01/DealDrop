@@ -68,7 +68,6 @@ export default function PriceChart({ productId }) {
             }}
           />
           <Line
-            type="monotone"
             dataKey="price"
             stroke="#FA5D19"
             strokeWidth={2}
