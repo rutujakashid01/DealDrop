@@ -57,7 +57,7 @@ const ProductCard = ({ product }) => {
                     {product.current_price} {product.currency}
                     </span>
 
-                    <Badge varient="secondary" className="gap-1">
+                    <Badge variant="secondary" className="gap-1">
                         <TrendingDown className='w-3 h-3'/>
                         Tracking 
                     </Badge>
@@ -96,10 +96,10 @@ const ProductCard = ({ product }) => {
               </Button > 
 
              <Button 
-             variant="gosht"
+             variant="ghost"
              size="sm"
              onClick={handleDelete}
-             diabled={deleting}
+             disabled={deleting}
              className="gap-1 text-red-600 hover:bg-red-50 hover:text-red-700">
              <Trash2 className="w-4 h-4"/>
                 Remove
@@ -109,11 +109,14 @@ const ProductCard = ({ product }) => {
         </CardContent>
 
         {showChart && (
-        <CardFooter className="pt-0"> 
+        <CardFooter className="pt-0 w-full"> 
            <PriceChart productId={product.id} />
 
         </CardFooter>
         )}
+
+
+        
         </Card>
       
   );

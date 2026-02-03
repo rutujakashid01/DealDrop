@@ -10,20 +10,37 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import { getPriceHistory } from "@/app/action";
 import { Loader2 } from "lucide-react";
+import {createClient} from "@/utils/supabase/client";
 
 export default function PriceChart({ productId }) {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const supabase = createClient();
 
   useEffect(() => {
-    async function loadData() {
-      const history = await getPriceHistory(productId);
+    if (!productId) return;
 
-      const chartData = history.map((item) => ({
-        date: new Date(item.checked_at).toLocaleDateString(),
-        price: parseFloat(item.price),
+    async function loadData() {
+      setLoading(true);
+
+      const { data, error } = await supabase
+        .from("price_history")
+        .select("price, checked_at")
+        .eq("product_id", productId)
+        .order("checked_at", { ascending: true });
+
+      if (error) {
+        console.error("Supabase error:", error);
+        setLoading(false);
+        return;
+      }
+
+      const chartData = data.map((item, index) => ({
+        date: item.checked_at
+          ? new Date(item.checked_at).toLocaleDateString()
+          : `Point ${index + 1}`,
+        price: Number(item.price),
       }));
 
       setData(chartData);
@@ -42,40 +59,35 @@ export default function PriceChart({ productId }) {
     );
   }
 
-  if (data.length === 0) {
+  if (!data.length) {
     return (
       <div className="text-center py-8 text-gray-500 w-full">
-        No price history yet. Check back after the first daily update!
+        No price history yet.
       </div>
     );
   }
 
   return (
-    <div className="w-full">
+    <div className="w-full h-75 mt-4">
       <h4 className="text-sm font-semibold mb-4 text-gray-700">
         Price History
       </h4>
-      <ResponsiveContainer width="100%" height={200}>
+      <ResponsiveContainer width="100%" height="100%">
         <LineChart data={data}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-          <XAxis dataKey="date" tick={{ fontSize: 12 }} stroke="#9ca3af" />
-          <YAxis tick={{ fontSize: 12 }} stroke="#9ca3af" />
-          <Tooltip
-            contentStyle={{
-              backgroundColor: "white",
-              border: "1px solid #e5e7eb",
-              borderRadius: "6px",
-            }}
-          />
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="date" />
+          <YAxis />
+          <Tooltip />
           <Line
             dataKey="price"
             stroke="#FA5D19"
             strokeWidth={2}
-            dot={{ fill: "#FA5D19", r: 4 }}
-            activeDot={{ r: 6 }}
+            dot={{ r: 4 }}
           />
         </LineChart>
       </ResponsiveContainer>
     </div>
   );
 }
+
+
