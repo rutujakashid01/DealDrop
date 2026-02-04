@@ -7,7 +7,8 @@ import AuthModal  from './Authmodal';
 import { useState } from 'react';
 import { signOut } from '@/app/action';
 
-const AuthButton = ({user}) => {
+
+export default function AuthButton  ({user}) {
     const [showAuthModal, setShowAuthModal] =useState(false);
 
     if (user) {
@@ -42,4 +43,3 @@ const AuthButton = ({user}) => {
   );
 }
 
-export default AuthButton

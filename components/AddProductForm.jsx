@@ -1,4 +1,5 @@
 "use client";
+
 import { useState } from "react";
 import React from "react";
 import { Input } from "@/components/ui/input";
@@ -13,7 +14,7 @@ import { toast } from "sonner";
 
 
 
-const AddProductForm = ({user}) => {
+export default function AddProductForm ({user}) {
   const [url, setUrl] =useState("");
   const [loading, setLoading] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
@@ -94,4 +95,4 @@ const AddProductForm = ({user}) => {
   );
 };
 
-export default AddProductForm;
+

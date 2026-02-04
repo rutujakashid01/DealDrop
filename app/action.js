@@ -40,7 +40,7 @@ export async function addProduct(formData) {
         const newPrice = parseFloat(productData.current_price);
         const currency = productData.currency || "USD";
 
-        const{data: existingProduct,}= await supabase
+        const{data: existingProduct}= await supabase
         .from("products")
         .select("id,current_price")
         .eq("url", url)
@@ -136,14 +136,14 @@ export async function deleteProduct(productId) {
     export async function getPriceHistory(productId){
         try{
             const supabase = await createClient();
-            const {data: history, error} = await supabase
+            const {data, error} = await supabase
             .from("price_history")
             .select("*")
             .eq("product_id", productId)
-            .order("recorded_at", {ascending: true});
+            .order("checked_at", {ascending: true});
 
         if (error) throw error;
-        return history || [];
+        return data || [];
 
         } catch (error) {
             console.error("Get price history error:", error);

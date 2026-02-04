@@ -118,7 +118,7 @@ export default async function Home() {
         </div>
       </section>)}
 
-      {/* Products Section */}
+      {/* Empty State */}
       {user && products.length ===0 && (
         <section className="max-w-2xl mx-auto text-center py-10 px-4">
           <div className="bg-white rounded-xl border-2 border-dashed border-gray-300 p-12">
